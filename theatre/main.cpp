@@ -55,30 +55,26 @@ int main()
 
     // 2. looppi käyttäjän syötteitä
 
-    std::string user_command;
-
+    std::string command;
 
     while(true) {
 
-        std::cout << "the> ";
-        std::cin >> user_command;
+        std::cout << PROMPT;
+        std::cin >> command;
 
-        std::vector multi_command = split(user_command, ' ');
-        std::vector< std::string >::size_type number_of_parameters = multi_command.size();
+        std::vector<std::string>::size_type number_of_parameters = 1;
 
-        std::cout << "number of parameters: " << number_of_parameters << " and at 1 we have " << multi_command.at(0) << std::endl;
-
-        if(multi_command.at(0) == "quit" and number_of_parameters == 1) {
+        if(command == "quit" and number_of_parameters == 1) {
             return EXIT_SUCCESS;
-        } else if (multi_command.at(0) == "theaters" and number_of_parameters == 1) {
+        } else if (command == "theaters" and number_of_parameters == 1) {
 
-        } else if (multi_command.at(0) == "plays" and number_of_parameters == 1) {
+        } else if (command == "plays" and number_of_parameters == 1) {
 
-        } else if (multi_command.at(0) == "theaters_of_play" and number_of_parameters == 2) {
+        } else if (command == "theaters_of_play" and number_of_parameters == 2) {
 
-        } else if (multi_command.at(0) == "plays_in_theater" and number_of_parameters == 2) {
+        } else if (command == "plays_in_theater" and number_of_parameters == 2) {
 
-        } else if (multi_command.at(0) == "players_in_play" and number_of_parameters >= 2 and number_of_parameters <= 3) {
+        } else if (command == "players_in_play" and number_of_parameters >= 2 and number_of_parameters <= 3) {
 
         } else {
             std::cout << WRONG_PARAMETERS << std::endl;
