@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<<<<<<< HEAD
-<!-- Written by QtCreator 4.15.0, 2023-10-25T13:09:40. -->
-=======
-<!-- Written by QtCreator 4.15.0, 2023-10-25T13:04:38. -->
->>>>>>> 160257f8f7f25d6c7f67c341b7d08ac76db590a6
+<!-- Written by QtCreator 4.15.0, 2023-10-25T17:34:37. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -296,18 +292,14 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-<<<<<<< HEAD
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">theatre2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/bmesas/prog2/projects/theatre/theatre.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/bmesas/prog2/projects/theatre/theatre.pro</value>
-=======
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.CustomExecutableRunConfiguration</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey"></value>
->>>>>>> 160257f8f7f25d6c7f67c341b7d08ac76db590a6
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/nrtesy/project/project2/theatre/theatre.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/nrtesy/project/project2/theatre/theatre.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
+    <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/nrtesy/project/project2/build-theatre-Desktop_Qt_6_1_1_GCC_64bit-Debug</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

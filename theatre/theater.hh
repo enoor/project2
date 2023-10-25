@@ -1,11 +1,19 @@
 #ifndef THEATER_HH
 #define THEATER_HH
+#include <iostream>
+#include <map>
+#include <set>
+#include <vector>
 
 
 class Theater
 {
 public:
-    Theater();
+    Theater(std::string theater, std::string town, std::map<std::set<std::string>, std::vector<std::string>> play, int seats );
+    std::string get_name();
+    void put_play(std::string play);
+    std::string get_play_name(std::string wanted);
+    std::string get_town();
     // string teatterin nimi
     // string kaupunki
     /* map: näyttelyt >
@@ -18,6 +26,14 @@ public:
      * get_kaupunki
      *
      */
+
+private:
+    std::string theater_;
+    std::string town_;
+    std::map<std::set<std::string>, std::vector<std::string>> play_;
+    int seats_;
+
+
 
 
 };

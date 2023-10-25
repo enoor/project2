@@ -1,7 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <theater.hh>
 
-// morommoro
+// there's a "smalltest.txt" file in the build folder which can be used for
+// initial testing, it's just 3 rows with 2 theaters.
+
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -43,11 +47,70 @@ std::vector<std::string> split(const std::string& str, char delim)
     return result;
 }
 
+void read_file(std::ifstream& file) {
+    std::vector<Theater> theaters; // vector of class objects for future checking
+
+    std::string line;
+
+       while (getline(file, line)) {
+           std::cout  << "test print       " << line << std::endl; //test
+
+           std::vector info = split(line, ';');
+           std::string town = info.at(0);
+           std::string name = info.at(1);
+           std::set<std::string> play = {info.at(2)};
+           std::vector<std::string> actor = {info.at(3)};
+
+           std::map<std::set<std::string>, std::vector<std::string>> play_data;
+           play_data[play] = actor;
+
+           int seats = std::stoi(info.at(4)); // string to integer conversion
+
+           // check if we already have a class object for this theater:
+           bool exists = false;
+           for (Theater& theater : theaters) {
+               if (theater.get_name() == name) {
+                   exists = true;
+                   break;
+               }
+           }
+
+           if (exists == false) {
+               std::cout << "creating a class object" << std::endl;
+               Theater my_theater(name, town, play_data, seats); // create a class object
+               theaters.push_back(my_theater); // add object to vector of objects
+           }
+          //else if {
+            // update the existing object.
+            // else if get_play_name == "" (function not confirmed functional yet!)
+            // -> add play
+            //}
+       }
+           std::cout  << "test print to see if 2 theaters have been created:" << std::endl; //test
+           for (Theater& theater : theaters) { // test
+                std::cout << theater.get_town() << " - " << theater.get_name() << std::endl; //test
+           }
+           file.close();
+
+        }
+
+
+
 
 // Main function
 int main()
 {
+    std::string filename = "";
+    std::cout << "Input file: ";
+    std::cin >> filename;
 
+    std::ifstream file_object(filename);
+    if (!file_object) {
+        std::cout << FILE_ERROR << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    read_file(file_object);
     // Lue csv tiedosto rivi riviltä, siirä jokainen vektorin pala sopiviin containereihin
     // jokainen rivi muotoa <town>;<theatre>;<play>;<player>;<number_of_free_seats>
 
