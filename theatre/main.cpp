@@ -65,8 +65,7 @@ std::vector<std::string> split(const std::string& str, char delim)
 }
 
 
-
-void read_file(std::ifstream& file) {
+std::vector<Theater> read_file(std::ifstream& file) {
     std::vector<Theater> theaters; // vector of class objects for future checking
 
     std::string line;
@@ -83,7 +82,12 @@ void read_file(std::ifstream& file) {
         std::map<std::set<std::string>, std::vector<std::string>> play_data;
         play_data[play] = actor;
 
-        int seats = std::stoi(info.at(4)); // string to integer conversion
+        int seats;
+        if(info.at(4) == "none") {
+            seats = 0;
+        } else {
+            seats = std::stoi(info.at(4)); // string to integer conversion
+        }
 
         // check if we already have a class object for this theater:
         bool exists = false;
@@ -105,11 +109,13 @@ void read_file(std::ifstream& file) {
         // -> add play
         //}
     }
-    std::cout  << "test print to see if 2 theaters have been created:" << std::endl; //test
+    std::cout  << "\ntest print to see if 2 theaters have been created:" << std::endl; //test
     for (Theater& theater : theaters) { // test
         std::cout << theater.get_town() << " - " << theater.get_name() << std::endl; //test
     }
     file.close();
+
+    return theaters;
 
 }
 
@@ -134,25 +140,37 @@ bool is_command_valid(std::vector<std::string>& commands) {
 
 }
 
+void order_alphabetically(std::vector<Theater>& all_theaters) {
+
+    std::vector<Theater> alphabetized_theaters;
+    std::string previous_name = "";
+    for(Theater t : all_theaters) {
+
+        bool is_smaller = t.get_name() < previous_name;
+        std::cout << t.get_name() << " is earlier in alphabet than " << previous_name << ": " << !is_smaller << std::endl;
+
+    }
+
+}
+
 // Main function
 int main()
 {
-    std::map<std::string, std::vector<Theater>> theaters_in_town;
 
-    //    std::string filename = "plays.csv";
-    //    std::cout << "Input file: ";
-    //    std::cin >> filename;
+    // Read a file into memory and transform it into Theater objects based on given information
+    std::string filename = "plays_simple.csv";
+    //std::cout << "Input file: ";
+    //std::cin >> filename;
 
-    //    std::ifstream file_object(filename);
-    //    if (!file_object) {
-    //        std::cout << FILE_ERROR << std::endl;
-    //        return EXIT_FAILURE;
-    //    }
+    std::ifstream file_object(filename);
+    if (!file_object) {
+        std::cout << FILE_ERROR << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    //    read_file(file_object);
-    // Lue csv tiedosto rivi riviltä, siirä jokainen vektorin pala sopiviin containereihin
-    // jokainen rivi muotoa <town>;<theatre>;<play>;<player>;<number_of_free_seats>
+    std::vector<Theater> all_theaters = read_file(file_object);
 
+    // Read user input from standard input and ask for commands to access information given in the file
     std::string input = "";
     Command command;
 
@@ -171,7 +189,10 @@ int main()
             return EXIT_SUCCESS;
         }
         else if (commands.at(0) == "theaters") {
-
+            order_alphabetically(all_theaters);
+            for(Theater theater : all_theaters) {
+                std::cout << theater.get_name() << std::endl;
+            }
         }
         else if (commands.at(0) == "plays") {
 
