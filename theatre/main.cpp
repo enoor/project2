@@ -143,13 +143,21 @@ bool is_command_valid(std::vector<std::string>& commands) {
 void order_alphabetically(std::vector<Theater>& all_theaters) {
 
     std::vector<Theater> alphabetized_theaters;
-    std::string previous_name = "";
+    std::string previous = "";
     for(Theater t : all_theaters) {
 
-        bool is_smaller = t.get_name() < previous_name;
-        std::cout << t.get_name() << " is earlier in alphabet than " << previous_name << ": " << !is_smaller << std::endl;
+        bool is_smaller = t.get_name() < previous;
 
+        if(is_smaller) {
+           alphabetized_theaters.insert(alphabetized_theaters.begin(), t);
+        } else {
+           alphabetized_theaters.push_back(t);
+        }
+
+        previous = t.get_name();
     }
+
+    all_theaters = alphabetized_theaters;
 
 }
 
