@@ -26,15 +26,14 @@ const std::string TOWN_NOT_FOUND = "Error: unknown town";
 const std::string COMMAND_NOT_FOUND = "Error: unknown command";
 const std::string NOT_AVAILABLE = "No plays available";
 
-// structure for a command
+// Structure for a command
 struct Command {
     std::string name;
     std::vector<std::string>::size_type min_param;
     std::vector<std::string>::size_type max_param;
-    std::pair<std::vector<std::string>::size_type, std::vector<std::string>::size_type> limits = {min_param, max_param};
 };
 
-// available commands
+// Available commands for user
 const std::vector<Command> COMMANDS = {{"quit",1,1},
                                        {"theaters",1,1},
                                        {"plays",1,1},
@@ -114,25 +113,25 @@ void read_file(std::ifstream& file) {
 
 }
 
-
-bool is_right_amount_of_inputs(const std::vector<std::string>& commands, const std::pair<std::vector<std::string>::size_type, std::vector<std::string>::size_type>& limits) {
-    if(commands.size() >= limits.first and commands.size() <= limits.second) {
-        return true;
-    } else {
-        std::cout << WRONG_PARAMETERS << std::endl;
-        return 0;
-    }
-}
-
+// Checks whether the command given by user is valid and gives an error message if not.
 bool is_command_valid(std::vector<std::string>& commands) {
+    // Checks if a command given in input exists
+    for(Command x : COMMANDS) {
+        if(commands.at(0) == x.name) {
 
-    // Checks if any such command exists
-    // TO DO: IF FUNCTION FOR COMMAND EXISTING
+            // For a correct command, check whether input the right amount of parameters
+            if(commands.size() >= x.min_param and commands.size() <= x.max_param) {
+                return 1;
+            } else {
+                std::cout << WRONG_PARAMETERS << std::endl;
+                return 0;
+            }
+        }
+    }
 
-    // Checks if you have given the right amount of parameters for the command
-    // TO DO: IF FUNCTION FOR LENGTH OF THE VECTOR OF COMMANDS VS LIMITS FOR SAID COMMAND
+    std::cout << COMMAND_NOT_FOUND << std::endl;
+    return 0;
 
-    return 1;
 }
 
 // Main function
@@ -140,17 +139,17 @@ int main()
 {
     std::map<std::string, std::vector<Theater>> theaters_in_town;
 
-    std::string filename = "plays.csv";
-    std::cout << "Input file: ";
-    std::cin >> filename;
+    //    std::string filename = "plays.csv";
+    //    std::cout << "Input file: ";
+    //    std::cin >> filename;
 
-    std::ifstream file_object(filename);
-    if (!file_object) {
-        std::cout << FILE_ERROR << std::endl;
-        return EXIT_FAILURE;
-    }
+    //    std::ifstream file_object(filename);
+    //    if (!file_object) {
+    //        std::cout << FILE_ERROR << std::endl;
+    //        return EXIT_FAILURE;
+    //    }
 
-    read_file(file_object);
+    //    read_file(file_object);
     // Lue csv tiedosto rivi riviltä, siirä jokainen vektorin pala sopiviin containereihin
     // jokainen rivi muotoa <town>;<theatre>;<play>;<player>;<number_of_free_seats>
 
@@ -168,27 +167,25 @@ int main()
             continue;
         }
 
-        if(commands.at(0) == "quit" and is_right_amount_of_inputs(commands, {1,1})) {
+        if(commands.at(0) == "quit") {
             return EXIT_SUCCESS;
         }
-        else if (commands.at(0) == "theaters" and is_right_amount_of_inputs(commands, {1,1})) {
+        else if (commands.at(0) == "theaters") {
 
         }
-        else if (commands.at(0) == "plays" and is_right_amount_of_inputs(commands, {1,1})) {
+        else if (commands.at(0) == "plays") {
 
         }
-        else if (commands.at(0) == "theaters_of_play" and is_right_amount_of_inputs(commands, {2,2})) {
+        else if (commands.at(0) == "theaters_of_play") {
 
         }
-        else if (commands.at(0) == "plays_in_theater" and is_right_amount_of_inputs(commands, {2,2})) {
+        else if (commands.at(0) == "plays_in_theater") {
 
         }
-        else if (commands.at(0) == "players_in_play" and is_right_amount_of_inputs(commands, {2,3})) {
+        else if (commands.at(0) == "players_in_play") {
 
         }
 
 
     }
-
-    return EXIT_SUCCESS;
 }
