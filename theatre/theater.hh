@@ -3,35 +3,39 @@
 #include <iostream>
 #include <map>
 #include <set>
-#include <vector>
 
 struct Play {
-    // TO DO: Essi
+    std::string name = "";
+    std::set<std::string> actors = {};
+    int available_seats = 0;
 };
 
 class Theater
 {
 public:
-    Theater(std::string theater, std::string town, std::map<std::set<std::string>, std::vector<std::string>> play, int seats );
+    Theater(std::string name,
+            std::string town, 
+            std::set<Play> plays);
+    
+    ~Theater();
+    
+    // Get details about theater
     std::string get_name();
-    void put_play(std::set<std::string> new_play);
-    void put_actor(std::string actor, std::set<std::string> play_name);
-    std::string get_play_name(std::string wanted);
     std::string get_town();
-    std::vector<std::string> get_actors(std::set<std::string> play_name);
-    void update_seats(int new_seats);
-    int get_seats();
-    std::map<std::set<std::string>, std::vector<std::string>> get_play(); // TO DO: Essi
-
-    // idea? TO DO: Essi
-    void print_info(bool name, bool town); // function for checking if stuff is correct :D
-
+    std::set<Play> get_all_plays(); // TO DO: Essi
+    
+    void put_play(Play& new_play); // Adds play to theater, if it isn't already listed
+    Play get_play(std::string play_name); // get a specific play
+    void put_actor(std::string actor, std::string play_name); // Adds actor to specific play, if they aren't already listed
+    void update_seats(int new_seats, std::string play_name); // Updates seats of specific play
+    
+    void print_info(bool name, bool town, bool plays); // TO DO: Essi
+    
 private:
-    std::string theater_;
+    std::string name_;
     std::string town_;
-    std::map<std::set<std::string>, std::vector<std::string>> play_;
-    int seats_;
-
+    std::set<Play> plays_;
+    
 };
 
 #endif // THEATER_HH

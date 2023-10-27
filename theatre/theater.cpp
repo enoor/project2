@@ -1,53 +1,91 @@
 #include "theater.hh"
 
-Theater::Theater(std::string theater, std::string town, std::map<std::set<std::string>, std::vector<std::string>> play, int seats):
-    theater_(theater), town_(town), play_(play), seats_(seats) {
+Theater::Theater(std::string name,
+                 std::string town,
+                 std::set<Play> plays):
+    name_(name), town_(town), plays_(plays) {
+}
+
+Theater::~Theater()
+{
 }
 
 std::string Theater::get_name() {
-    return theater_;
+    return name_;
 }
 
 std::string Theater::get_town() {
     return town_;
 }
 
-std::string Theater::get_play_name(std::string wanted) {
-    for (auto& i : play_) {
-        std::set<std::string> play_names = i.first; //first element of the set
-        if (play_names.find(wanted) != play_names.end()) {
-            return i.second[0];  // Return the name of the play
+std::set<Play> Theater::get_all_plays() {
+    return plays_;
+}
+
+void Theater::put_play(Play& new_play) {
+    if(plays_.find(new_play) == plays_.end()) {
+        plays_.insert(new_play);
+    }
+}
+
+Play Theater::get_play(std::string play_name) {
+
+    for(auto& play : plays_) {
+        if(play.name == play_name) {
+            return play;
+
         }
     }
-    return "";  // Play does not exist
+
+    return {"", {}, 0};
 }
 
-std::vector<std::string> Theater::get_actors(std::set<std::string> play_name) {
+void Theater::put_actor(std::string actor, std::string play_name) {
 
-    std::vector<std::string> actors;
-    actors = play_[play_name];
+    // Find the play being asked for and add the actor to the play, if it doesn't already exist there
+    for(auto& play : plays_) {
+        if(play.name == play_name) {
 
-    return actors;
-}
+            if(play.actors.find(actor) != play.actors.end()) {
+                //play.actors.insert(actor);
+            }
 
-void Theater::put_play(std::set<std::string> new_play) {
-    play_[new_play] = std::vector<std::string>();
-}
-
-void Theater::put_actor(std::string actor, std::set<std::string> play_name) {
-
-    play_[play_name].push_back(actor); // add actor to vector of actors in specific play
-
+        }
     }
 
-void Theater::update_seats(int new_seats){
-    seats_ = new_seats;
 }
 
-std::map<std::set<std::string>, std::vector<std::string>> Theater::get_play() {
-    return play_;
+void Theater::update_seats(int new_seats, std::string play_name){
+
 }
 
-int Theater::get_seats(){
-    return seats_;
+void Theater::print_info(bool name = true, bool town = true, bool plays = true)
+{
+
+    std::cout << "Information about theater object:" << std::endl;
+
+    if(name) {
+        std::cout << "Theater name: " << name_ << std::endl;
+    }
+
+    if(town) {
+        std::cout << "In town: " << town_ << std::endl;
+    }
+
+    if(plays) {
+        std::cout << "With following plays: " << std::endl;
+
+        for(auto play : plays_) {
+            std::cout << play.name << " : " << play.available_seats << std::endl;
+
+            for(auto& actor : play.actors) {
+                std::cout << "- " << actor << std::endl;
+            }
+
+        }
+    }
 }
+
+
+
+

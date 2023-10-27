@@ -11,6 +11,7 @@
 /* Comment by Teemu
  */
 
+struct Play play;
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -68,69 +69,69 @@ std::vector<std::string> split(const std::string& str, char delim)
 }
 
 
-std::vector<Theater> read_file(std::ifstream& file) {
+//std::vector<Theater> read_file(std::ifstream& file) {
 
-   // TO DO: Teemu make into map: string:name > Theater object
-    std::vector<Theater> theaters; // vector of class objects for future checking
+//   // TO DO: Teemu make into map: string:name > Theater object
+//    std::vector<Theater> theaters; // vector of class objects for future checking
 
-    std::string line;
+//    std::string line;
 
-    while (getline(file, line)) {
-        std::cout  << "test print       " << line << std::endl; //test
+//    while (getline(file, line)) {
+//        std::cout  << "test print       " << line << std::endl; //test
 
-        std::vector info = split(line, ';');
-        std::string town = info.at(0);
-        std::string name = info.at(1);
-        std::set<std::string> play = {info.at(2)};
-        std::vector<std::string> actor = {info.at(3)};
+//        std::vector info = split(line, ';');
+//        std::string town = info.at(0);
+//        std::string name = info.at(1);
+//        std::set<std::string> play = {info.at(2)};
+//        std::vector<std::string> actor = {info.at(3)};
 
-        std::map<std::set<std::string>, std::vector<std::string>> play_data;
-        play_data[play] = actor;
+//        std::map<std::set<std::string>, std::vector<std::string>> play_data;
+//        play_data[play] = actor;
 
-        int seats;
-        if(info.at(4) == "none") {
-            seats = 0;
-        } else {
-            seats = std::stoi(info.at(4)); // string to integer conversion
-        }
+//        int seats;
+//        if(info.at(4) == "none") {
+//            seats = 0;
+//        } else {
+//            seats = std::stoi(info.at(4)); // string to integer conversion
+//        }
 
-        // check if we already have a class object for this theater:
-        bool exists = false;
-        for (Theater& theater : theaters) {
-            if (theater.get_name() == name) {
-                exists = true;
-                if (theater.get_play_name(name) == "") {
-                    theater.put_play({info.at(2)});
-                    theater.put_actor(actor[0], {info.at(2)});
-                }
-                else {
-                    std::vector<std::string> lst_of_actors = theater.get_actors({info.at(2)});
-                    for (std::string& a : lst_of_actors){
-                        if (a != actor[0]){
-                           theater.put_actor(actor[0], {info.at(2)});
-                        }
-                    }
-                }
-              theater.update_seats(seats);
-            }
-        }
+//        // check if we already have a class object for this theater:
+//        bool exists = false;
+//        for (Theater& theater : theaters) {
+//            if (theater.get_name() == name) {
+//                exists = true;
+//                if (theater.get_play_name(name) == "") {
+//                    theater.put_play({info.at(2)});
+//                    theater.put_actor(actor[0], {info.at(2)});
+//                }
+//                else {
+//                    std::vector<std::string> lst_of_actors = theater.get_actors({info.at(2)});
+//                    for (std::string& a : lst_of_actors){
+//                        if (a != actor[0]){
+//                           theater.put_actor(actor[0], {info.at(2)});
+//                        }
+//                    }
+//                }
+//              theater.update_seats(seats);
+//            }
+//        }
 
-        if (exists == false) {
-            std::cout << "creating a class object" << std::endl;
-            Theater my_theater(name, town, play_data, seats); // create a class object
-            theaters.push_back(my_theater); // add object to vector of objects
-        }
-    }
+//        if (exists == false) {
+//            std::cout << "creating a class object" << std::endl;
+//            Theater my_theater(name, town, play_data, seats); // create a class object
+//            theaters.push_back(my_theater); // add object to vector of objects
+//        }
+//    }
 
-    std::cout  << "\ntest print to see if 2 theaters have been created:" << std::endl; //test
-    for (Theater& theater : theaters) { // test
-        std::cout << theater.get_town() << " - " << theater.get_name() << theater.get_seats() << std::endl; //test
-    }
-    file.close();
+//    std::cout  << "\ntest print to see if 2 theaters have been created:" << std::endl; //test
+//    for (Theater& theater : theaters) { // test
+//        std::cout << theater.get_town() << " - " << theater.get_name() << theater.get_seats() << std::endl; //test
+//    }
+//    file.close();
 
-    return theaters;
+//    return theaters;
 
-}
+//}
 
 // Checks whether the command given by user is valid and gives an error message if not.
 bool is_command_valid(std::vector<std::string>& commands) {
@@ -179,57 +180,70 @@ void order_alphabetically(std::vector<Theater>& all_theaters) {
 // Main function
 int main()
 {
+    Play p1 = {"Testi näytelmä",
+               {"Maija Meikäläinen", "Hemmo Harjava", "Katti Matikainen"},
+              20};
 
-    // Read a file into memory and transform it into Theater objects based on given information
-    std::string filename = "plays.csv";
-    //std::cout << "Input file: ";
-    //std::cin >> filename;
+    Play p2 = {"Testi näytelmä 2",
+               {"Kaija Koo", "Lordi", "Seppä Ilmarinen"},
+              0};
 
-    std::ifstream file_object(filename);
-    if (!file_object) {
-        std::cout << FILE_ERROR << std::endl;
-        return EXIT_FAILURE;
-    }
+    Theater testi("Testi Teatteri",
+                  "Tampere",
+                  {p1, p2});
 
-    std::vector<Theater> all_theaters = read_file(file_object);
+    testi.print_info(1, 1, 1);
 
-    // Read user input from standard input and ask for commands to access information given in the file
-    std::string input = "";
-    Command command;
+//    // Read a file into memory and transform it into Theater objects based on given information
+//    std::string filename = "plays.csv";
+//    //std::cout << "Input file: ";
+//    //std::cin >> filename;
 
-    while(true) {
-        std::cout << PROMPT;
-        std::getline(std::cin, input);
+//    std::ifstream file_object(filename);
+//    if (!file_object) {
+//        std::cout << FILE_ERROR << std::endl;
+//        return EXIT_FAILURE;
+//    }
 
-        std::vector<std::string> commands = split(input, ' ');
+//    std::vector<Theater> all_theaters = read_file(file_object);
 
-        // Checks command validity, throws errors messages, and prompts again if not valid
-        if(!is_command_valid(commands)) {
-            continue;
-        }
+//    // Read user input from standard input and ask for commands to access information given in the file
+//    std::string input = "";
+//    Command command;
 
-        if(commands.at(0) == "quit") {
-            return EXIT_SUCCESS;
-        }
-        else if (commands.at(0) == "theaters") {
-            order_alphabetically(all_theaters);
-            for(Theater theater : all_theaters) {
-                std::cout << theater.get_name() << std::endl;
-            }
-        }
-        else if (commands.at(0) == "plays") {
-            // TO DO: Essi
-        }
-        else if (commands.at(0) == "theaters_of_play") {
-            // TO DO: Essi
-        }
-        else if (commands.at(0) == "plays_in_theater") {
-            // TO DO: Teemu
-        }
-        else if (commands.at(0) == "players_in_play") {
-            // TO DO: Teemu
-        }
+//    while(true) {
+//        std::cout << PROMPT;
+//        std::getline(std::cin, input);
+
+//        std::vector<std::string> commands = split(input, ' ');
+
+//        // Checks command validity, throws errors messages, and prompts again if not valid
+//        if(!is_command_valid(commands)) {
+//            continue;
+//        }
+
+//        if(commands.at(0) == "quit") {
+//            return EXIT_SUCCESS;
+//        }
+//        else if (commands.at(0) == "theaters") {
+//            order_alphabetically(all_theaters);
+//            for(Theater theater : all_theaters) {
+//                std::cout << theater.get_name() << std::endl;
+//            }
+//        }
+//        else if (commands.at(0) == "plays") {
+//            // TO DO: Essi
+//        }
+//        else if (commands.at(0) == "theaters_of_play") {
+//            // TO DO: Essi
+//        }
+//        else if (commands.at(0) == "plays_in_theater") {
+//            // TO DO: Teemu
+//        }
+//        else if (commands.at(0) == "players_in_play") {
+//            // TO DO: Teemu
+//        }
 
 
-    }
+//    }
 }
