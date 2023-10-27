@@ -4,8 +4,6 @@
 #include <set>
 #include <string>
 
-
-
 class Play
 {
 public:
@@ -14,9 +12,6 @@ public:
          int available_seats);
 
     ~Play();
-
-    // Program behavior for <, so that set functions with class
-    bool operator<(const Play& other) const;
 
     // Get details about play
     std::string get_name() const;

@@ -11,11 +11,6 @@ Play::~Play()
 
 }
 
-bool Play::operator<(const Play& other) const
-{
-    return name_ < other.name_;
-}
-
 std::string Play::get_name() const
 {
     return name_;

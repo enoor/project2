@@ -3,29 +3,43 @@
 
 Theater::Theater(std::string name,
                  std::string town,
-                 std::set<Play> plays):
-    name_(name), town_(town), plays_(plays) {
+                 std::vector<Play> plays):
+    name_(name), town_(town), plays_(plays)
+{
 }
 
 Theater::~Theater()
 {
 }
 
-std::string Theater::get_name() const {
+std::string Theater::get_name() const
+{
     return name_;
 }
 
-std::string Theater::get_town() const {
+std::string Theater::get_town() const
+{
     return town_;
 }
 
-std::set<Play> Theater::get_plays() const {
+std::vector<Play> Theater::get_plays() const
+{
     return plays_;
 }
 
-void Theater::put_play(Play& new_play) {
-    if(plays_.find(new_play) == plays_.end()) {
-        plays_.insert(new_play);
+void Theater::put_play(Play& new_play)
+{
+    bool play_exists = false;
+    for (Play& existingPlay : plays_) {
+        if (existingPlay.get_name() == new_play.get_name()) {
+            play_exists = true;
+            break; // No need to continue searching
+        }
+    }
+
+    if (!play_exists) {
+        // Add the actor to the play
+        plays_.push_back(new_play);
     }
 }
 
@@ -41,24 +55,37 @@ Play Theater::get_play(std::string play_name) {
     return {"", {}, 0};
 }
 
-//void Theater::put_actor(std::string actor, std::string play_name) {
+void Theater::put_actor_in_play(std::string actor, std::string play_name)
+{
+    // Find the play being asked for
+    for (Play& play : plays_) {
+        if (play.get_name() == play_name) {
+            // Check if the actor is already in the play
+            bool actorExists = false;
+            for (const std::string& existingActor : play.get_actors()) {
+                if (existingActor == actor) {
+                    actorExists = true;
+                    break;
+                }
+            }
 
-//    // Find the play being asked for and add the actor to the play, if it doesn't already exist there
-//    for(auto& play : plays_) {
-//        if(play.name == play_name) {
+            if (!actorExists) {
+                // Add the actor to the play, if actor not listed
+                play.add_actor(actor);
+            }
+        }
+    }
+}
 
-//            if(play.actors.find(actor) != play.actors.end()) {
-//                //play.actors.insert(actor);
-//            }
-
-//        }
-//    }
-
-//}
-
-//void Theater::update_seats(int new_seats, std::string play_name){
-
-//}
+void Theater::update_seats_in_play(int new_seats, std::string play_name)
+{
+    // Find the play being asked for
+    for (Play& play : plays_) {
+        if (play.get_name() == play_name) {
+            play.update_seats(new_seats);
+        }
+    }
+}
 
 void Theater::print()
 {

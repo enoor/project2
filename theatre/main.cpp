@@ -122,6 +122,7 @@ int main()
 
     Play p3("Uusi näytelmä", {"Mari Mantunen", "Heikki Herras"}, 15);
     testi.put_play(p3);
+    testi.update_seats_in_play(3, "Testi näytelmä");
 
 
     testi.print();
