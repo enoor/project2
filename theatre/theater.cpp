@@ -13,21 +13,41 @@ std::string Theater::get_town() {
 }
 
 std::string Theater::get_play_name(std::string wanted) {
-    // not tested, confusing!! :D Does this search for the right thing?
-    // this is supposed to return the name of the play if it exists and
-    // "" if it does not
-    std::set<std::string> key = {wanted};
-    std::vector<std::string> play_names = play_[key];
-
-    if (!play_names.empty()) {
-        return wanted;
+    for (auto& i : play_) {
+        std::set<std::string> play_names = i.first; //first element of the set
+        if (play_names.find(wanted) != play_names.end()) {
+            return i.second[0];  // Return the name of the play
+        }
     }
-    else {
-        return "";
-    }
+    return "";  // Play does not exist
 }
 
-void Theater::put_play(std::string new_play) {
+std::vector<std::string> Theater::get_actors(std::set<std::string> play_name) {
+
+    std::vector<std::string> actors;
+    actors = play_[play_name];
+
+    return actors;
+}
+
+void Theater::put_play(std::set<std::string> new_play) {
+    play_[new_play] = std::vector<std::string>();
+}
+
+void Theater::put_actor(std::string actor, std::set<std::string> play_name) {
+
+    play_[play_name].push_back(actor); // add actor to vector of actors in specific play
+
+    }
+
+void Theater::update_seats(int new_seats){
+    seats_ = new_seats;
+}
+
+void Theater::get_play() {
 
 }
 
+int Theater::get_seats(){
+    return seats_;
+}

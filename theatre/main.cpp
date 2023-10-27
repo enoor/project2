@@ -94,7 +94,19 @@ std::vector<Theater> read_file(std::ifstream& file) {
         for (Theater& theater : theaters) {
             if (theater.get_name() == name) {
                 exists = true;
-                break;
+                if (theater.get_play_name(name) == "") {
+                    theater.put_play({info.at(2)});
+                    theater.put_actor(actor[0], {info.at(2)});
+                }
+                else {
+                    std::vector<std::string> lst_of_actors = theater.get_actors({info.at(2)});
+                    for (std::string& a : lst_of_actors){
+                        if (a != actor[0]){
+                           theater.put_actor(actor[0], {info.at(2)});
+                        }
+                    }
+                }
+              theater.update_seats(seats);
             }
         }
 
@@ -103,15 +115,11 @@ std::vector<Theater> read_file(std::ifstream& file) {
             Theater my_theater(name, town, play_data, seats); // create a class object
             theaters.push_back(my_theater); // add object to vector of objects
         }
-        //else if {
-        // update the existing object.
-        // else if get_play_name == "" (function not confirmed functional yet!)
-        // -> add play
-        //}
     }
+
     std::cout  << "\ntest print to see if 2 theaters have been created:" << std::endl; //test
     for (Theater& theater : theaters) { // test
-        std::cout << theater.get_town() << " - " << theater.get_name() << std::endl; //test
+        std::cout << theater.get_town() << " - " << theater.get_name() << theater.get_seats() << std::endl; //test
     }
     file.close();
 
@@ -166,7 +174,7 @@ int main()
 {
 
     // Read a file into memory and transform it into Theater objects based on given information
-    std::string filename = "plays_simple.csv";
+    std::string filename = "smalltest.txt";
     //std::cout << "Input file: ";
     //std::cin >> filename;
 
