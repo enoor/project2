@@ -114,18 +114,56 @@ int main()
 {
     Play p1("Testi näytelmä", {"Maija Meikäläinen", "Hemmo Harjava", "Katti Matikainen"}, 20);
     Play p2("Testi näytelmä 2", {"Kaija Koo", "Lordi", "Seppä Ilmarinen"}, 0);
+    Play p3("Uusi näytelmä", {"Mari Mantunen", "Heikki Herras"}, 15);
 
-    Theater testi("Testi Teatteri",
+    Theater testi1("Testi Teatteri",
                   "Tampere",
                   {p1, p2});
-    testi.print();
+    Theater testi2("Kakkos teatteri",
+                  "Toijala",
+                  {p3});
 
-    Play p3("Uusi näytelmä", {"Mari Mantunen", "Heikki Herras"}, 15);
-    testi.put_play(p3);
-    testi.update_seats_in_play(3, "Testi näytelmä");
+    std::vector<Theater> all_theaters = {testi1, testi2};
+
+    // Read user input from standard input and ask for commands to access information given in the file
+       std::string input = "";
+       Command command;
+
+       while(true) {
+           std::cout << PROMPT;
+           std::getline(std::cin, input);
+
+           std::vector<std::string> commands = split(input, ' ');
+
+           // Checks command validity, throws errors messages, and prompts again if not valid
+           if(!is_command_valid(commands)) {
+               continue;
+           }
+
+           if(commands.at(0) == "quit") {
+               return EXIT_SUCCESS;
+           }
+           else if (commands.at(0) == "theaters") {
+               order_alphabetically(all_theaters);
+               for(Theater theater : all_theaters) {
+                   std::cout << theater.get_name() << std::endl;
+               }
+           }
+           else if (commands.at(0) == "plays") {
+               // TO DO: Essi
+           }
+           else if (commands.at(0) == "theaters_of_play") {
+               // TO DO: Essi
+           }
+           else if (commands.at(0) == "plays_in_theater") {
+               // TO DO: Teemu
+           }
+           else if (commands.at(0) == "players_in_play") {
+               // TO DO: Teemu
+           }
 
 
-    testi.print();
+       }
 
 
 }
