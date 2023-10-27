@@ -44,8 +44,8 @@ void Theater::update_seats(int new_seats){
     seats_ = new_seats;
 }
 
-void Theater::get_play() {
-
+std::map<std::set<std::string>, std::vector<std::string>> Theater::get_play() {
+    return play_;
 }
 
 int Theater::get_seats(){

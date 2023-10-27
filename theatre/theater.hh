@@ -5,6 +5,9 @@
 #include <set>
 #include <vector>
 
+struct Play {
+    // TO DO: Essi
+};
 
 class Theater
 {
@@ -18,28 +21,16 @@ public:
     std::vector<std::string> get_actors(std::set<std::string> play_name);
     void update_seats(int new_seats);
     int get_seats();
-    void get_play();
-    // string teatterin nimi
-    // string kaupunki
-    /* map: näyttelyt >
-     * set < vector päänäyttelijät,
-     *      int vapaat_paikat > */
+    std::map<std::set<std::string>, std::vector<std::string>> get_play(); // TO DO: Essi
 
-    /* funtiot:
-     * get_näyttelyt >
-     * put_näyttely >
-     * get_kaupunki
-     *
-     */
+    // idea? TO DO: Essi
+    void print_info(bool name, bool town); // function for checking if stuff is correct :D
 
 private:
     std::string theater_;
     std::string town_;
     std::map<std::set<std::string>, std::vector<std::string>> play_;
     int seats_;
-
-
-
 
 };
 

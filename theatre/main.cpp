@@ -8,6 +8,9 @@
 // there's a "smalltest.txt" file in the build folder which can be used for
 // initial testing, it's just 3 rows with 2 theaters.
 
+/* Comment by Teemu
+ */
+
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -66,6 +69,8 @@ std::vector<std::string> split(const std::string& str, char delim)
 
 
 std::vector<Theater> read_file(std::ifstream& file) {
+
+   // TO DO: Teemu make into map: string:name > Theater object
     std::vector<Theater> theaters; // vector of class objects for future checking
 
     std::string line;
@@ -150,6 +155,8 @@ bool is_command_valid(std::vector<std::string>& commands) {
 
 void order_alphabetically(std::vector<Theater>& all_theaters) {
 
+    //TO DO: Essi fix this
+
     std::vector<Theater> alphabetized_theaters;
     std::string previous = "";
     for(Theater t : all_theaters) {
@@ -174,7 +181,7 @@ int main()
 {
 
     // Read a file into memory and transform it into Theater objects based on given information
-    std::string filename = "smalltest.txt";
+    std::string filename = "plays.csv";
     //std::cout << "Input file: ";
     //std::cin >> filename;
 
@@ -211,16 +218,16 @@ int main()
             }
         }
         else if (commands.at(0) == "plays") {
-
+            // TO DO: Essi
         }
         else if (commands.at(0) == "theaters_of_play") {
-
+            // TO DO: Essi
         }
         else if (commands.at(0) == "plays_in_theater") {
-
+            // TO DO: Teemu
         }
         else if (commands.at(0) == "players_in_play") {
-
+            // TO DO: Teemu
         }
 
 
