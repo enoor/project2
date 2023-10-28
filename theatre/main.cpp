@@ -77,7 +77,7 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
         std::string town = info.at(0);
         std::string name = info.at(1);
         std::string play = info.at(2);
-        std::set<std::string> actors = {info.at(3)};
+        std::string actor = info.at(3);
 
         int seats;
         if(info.at(4) == "none") {
@@ -86,32 +86,22 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
             seats = std::stoi(info.at(4)); // string to integer conversion
         }
 
-        Play play_data(play, actors, seats); // add play data into an object
+        Play play_data(play, {actor}, seats); // add play data into an object
 
         // Check if the theater exists
-
         if(theaters.find(name) != theaters.end()) {
-            //TO DO: DOES NOT WORK, DOES NOT UPDATE CONTENT!!!!!
-            /* if exists, check whether the play data exists already
-             * check the play name
-             * check the actors
-             * change the seats */
-
-            Theater existing_theater = theaters.at(name);
-            existing_theater.print();
-            existing_theater.put_play(play_data);
+            //Update existing theater
+            Theater& existing_theater = theaters.at(name);
+            existing_theater.put_play(play_data); // if play doesn't exist, put play
+            existing_theater.put_actor_in_play(actor, play); // if play exists, put actor if it doesn't exist
+            existing_theater.update_seats_in_play(seats,play); // updates seats in said play
 
         } else {
+            // Add new theater
             Theater theater_data(name,town,{play_data});
             theaters.insert({name, theater_data});
         }
 
-    }
-
-    // testing what was created
-    std::cout << "Test what was created after reading file: " << std::endl;
-    for (auto& theater_info : theaters) {
-        theater_info.second.print();
     }
 
     file.close();
