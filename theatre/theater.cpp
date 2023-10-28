@@ -38,7 +38,7 @@ void Theater::put_play(Play& new_play)
     }
 
     if (!play_exists) {
-        // Add the actor to the play
+        // Add the play to the list of plays in the object
         plays_.push_back(new_play);
     }
 }

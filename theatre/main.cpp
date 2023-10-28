@@ -64,6 +64,60 @@ std::vector<std::string> split(const std::string& str, char delim)
     return result;
 }
 
+std::map<std::string, Theater> read_file(std::ifstream& file) {
+
+    std::map<std::string, Theater> theaters;
+
+    std::string line;
+
+    while (getline(file, line)) {
+
+        std::cout << "test input    " << line << std::endl;
+        std::vector info = split(line, ';');
+        std::string town = info.at(0);
+        std::string name = info.at(1);
+        std::string play = info.at(2);
+        std::set<std::string> actors = {info.at(3)};
+
+        int seats;
+        if(info.at(4) == "none") {
+            seats = 0;
+        } else {
+            seats = std::stoi(info.at(4)); // string to integer conversion
+        }
+
+        Play play_data(play, actors, seats); // add play data into an object
+
+        // Check if the theater exists
+
+        if(theaters.find(name) != theaters.end()) {
+            //TO DO: DOES NOT WORK, DOES NOT UPDATE CONTENT!!!!!
+            /* if exists, check whether the play data exists already
+             * check the play name
+             * check the actors
+             * change the seats */
+
+            Theater existing_theater = theaters.at(name);
+            existing_theater.print();
+            existing_theater.put_play(play_data);
+
+        } else {
+            Theater theater_data(name,town,{play_data});
+            theaters.insert({name, theater_data});
+        }
+
+    }
+
+    // testing what was created
+    std::cout << "Test what was created after reading file: " << std::endl;
+    for (auto& theater_info : theaters) {
+        theater_info.second.print();
+    }
+
+    file.close();
+    return theaters;
+}
+
 // Checks whether the command given by user is valid and gives an error message if not.
 bool is_command_valid(std::vector<std::string>& commands) {
     // Checks if a command given in input exists
@@ -85,85 +139,61 @@ bool is_command_valid(std::vector<std::string>& commands) {
 
 }
 
-void order_alphabetically(std::vector<Theater>& all_theaters) {
-
-    //TO DO: Essi fix this
-    // Currently does not work as intended
-
-    std::vector<Theater> alphabetized_theaters;
-    std::string previous = "";
-    for(Theater t : all_theaters) {
-
-        bool is_smaller = t.get_name() < previous;
-
-        if(is_smaller) {
-           alphabetized_theaters.insert(alphabetized_theaters.begin(), t);
-        } else {
-           alphabetized_theaters.push_back(t);
-        }
-
-        previous = t.get_name();
-    }
-
-    all_theaters = alphabetized_theaters;
-
-}
-
 // Main function
 int main()
 {
-    Play p1("Testi näytelmä", {"Maija Meikäläinen", "Hemmo Harjava", "Katti Matikainen"}, 20);
-    Play p2("Testi näytelmä 2", {"Kaija Koo", "Lordi", "Seppä Ilmarinen"}, 0);
-    Play p3("Uusi näytelmä", {"Mari Mantunen", "Heikki Herras"}, 15);
 
-    Theater testi1("Testi Teatteri",
-                  "Tampere",
-                  {p1, p2});
-    Theater testi2("Kakkos teatteri",
-                  "Toijala",
-                  {p3});
+    // Read a file into memory and transform it into Theater objects based on given information
+    std::string filename = "plays.csv";
+    //std::cout << "Input file: ";
+    //std::cin >> filename;
 
-    std::vector<Theater> all_theaters = {testi1, testi2};
+    std::ifstream file_object(filename);
+    if (!file_object) {
+        std::cout << FILE_ERROR << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::map<std::string, Theater> all_theaters = read_file(file_object);
 
     // Read user input from standard input and ask for commands to access information given in the file
-       std::string input = "";
-       Command command;
+    std::string input = "";
+    Command command;
 
-       while(true) {
-           std::cout << PROMPT;
-           std::getline(std::cin, input);
+    while(true) {
+        std::cout << PROMPT;
+        std::getline(std::cin, input);
 
-           std::vector<std::string> commands = split(input, ' ');
+        std::vector<std::string> commands = split(input, ' ');
 
-           // Checks command validity, throws errors messages, and prompts again if not valid
-           if(!is_command_valid(commands)) {
-               continue;
-           }
+        // Checks command validity, throws errors messages, and prompts again if not valid
+        if(!is_command_valid(commands)) {
+            continue;
+        }
 
-           if(commands.at(0) == "quit") {
-               return EXIT_SUCCESS;
-           }
-           else if (commands.at(0) == "theaters") {
-               order_alphabetically(all_theaters);
-               for(Theater theater : all_theaters) {
-                   std::cout << theater.get_name() << std::endl;
-               }
-           }
-           else if (commands.at(0) == "plays") {
-               // TO DO: Essi
-           }
-           else if (commands.at(0) == "theaters_of_play") {
-               // TO DO: Essi
-           }
-           else if (commands.at(0) == "plays_in_theater") {
-               // TO DO: Teemu
-           }
-           else if (commands.at(0) == "players_in_play") {
-               // TO DO: Teemu
-           }
+        if(commands.at(0) == "quit") {
+            return EXIT_SUCCESS;
+        }
+        else if (commands.at(0) == "theaters") {
+            for(auto& theater_info : all_theaters) {
+                std::cout << theater_info.first << std::endl;
+            }
+        }
+        else if (commands.at(0) == "plays") {
+            // TO DO: Essi
+        }
+        else if (commands.at(0) == "theaters_of_play") {
+            // TO DO: Essi
+        }
+        else if (commands.at(0) == "plays_in_theater") {
+            // TO DO: Teemu
+        }
+        else if (commands.at(0) == "players_in_play") {
+            // TO DO: Teemu
+        }
 
 
-       }
+    }
 
 
 }
