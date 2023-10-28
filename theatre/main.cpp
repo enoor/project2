@@ -4,13 +4,10 @@
 #include <utility>
 #include <fstream>
 #include <theater.hh>
-
-// there's a "smalltest.txt" file in the build folder which can be used for
-// initial testing, it's just 3 rows with 2 theaters.
+#include <play.hh>
 
 /* Comment by Teemu
  */
-
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -67,25 +64,20 @@ std::vector<std::string> split(const std::string& str, char delim)
     return result;
 }
 
+std::map<std::string, Theater> read_file(std::ifstream& file) {
 
-std::vector<Theater> read_file(std::ifstream& file) {
-
-   // TO DO: Teemu make into map: string:name > Theater object
-    std::vector<Theater> theaters; // vector of class objects for future checking
+    std::map<std::string, Theater> theaters;
 
     std::string line;
 
     while (getline(file, line)) {
-        std::cout  << "test print       " << line << std::endl; //test
 
+        std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
         std::string town = info.at(0);
         std::string name = info.at(1);
-        std::set<std::string> play = {info.at(2)};
-        std::vector<std::string> actor = {info.at(3)};
-
-        std::map<std::set<std::string>, std::vector<std::string>> play_data;
-        play_data[play] = actor;
+        std::string play = info.at(2);
+        std::set<std::string> actors = {info.at(3)};
 
         int seats;
         if(info.at(4) == "none") {
@@ -94,42 +86,36 @@ std::vector<Theater> read_file(std::ifstream& file) {
             seats = std::stoi(info.at(4)); // string to integer conversion
         }
 
-        // check if we already have a class object for this theater:
-        bool exists = false;
-        for (Theater& theater : theaters) {
-            if (theater.get_name() == name) {
-                exists = true;
-                if (theater.get_play_name(name) == "") {
-                    theater.put_play({info.at(2)});
-                    theater.put_actor(actor[0], {info.at(2)});
-                }
-                else {
-                    std::vector<std::string> lst_of_actors = theater.get_actors({info.at(2)});
-                    for (std::string& a : lst_of_actors){
-                        if (a != actor[0]){
-                           theater.put_actor(actor[0], {info.at(2)});
-                        }
-                    }
-                }
-              theater.update_seats(seats);
-            }
+        Play play_data(play, actors, seats); // add play data into an object
+
+        // Check if the theater exists
+
+        if(theaters.find(name) != theaters.end()) {
+            //TO DO: DOES NOT WORK, DOES NOT UPDATE CONTENT!!!!!
+            /* if exists, check whether the play data exists already
+             * check the play name
+             * check the actors
+             * change the seats */
+
+            Theater existing_theater = theaters.at(name);
+            existing_theater.print();
+            existing_theater.put_play(play_data);
+
+        } else {
+            Theater theater_data(name,town,{play_data});
+            theaters.insert({name, theater_data});
         }
 
-        if (exists == false) {
-            std::cout << "creating a class object" << std::endl;
-            Theater my_theater(name, town, play_data, seats); // create a class object
-            theaters.push_back(my_theater); // add object to vector of objects
-        }
     }
 
-    std::cout  << "\ntest print to see if 2 theaters have been created:" << std::endl; //test
-    for (Theater& theater : theaters) { // test
-        std::cout << theater.get_town() << " - " << theater.get_name() << theater.get_seats() << std::endl; //test
+    // testing what was created
+    std::cout << "Test what was created after reading file: " << std::endl;
+    for (auto& theater_info : theaters) {
+        theater_info.second.print();
     }
+
     file.close();
-
     return theaters;
-
 }
 
 // Checks whether the command given by user is valid and gives an error message if not.
@@ -153,29 +139,6 @@ bool is_command_valid(std::vector<std::string>& commands) {
 
 }
 
-void order_alphabetically(std::vector<Theater>& all_theaters) {
-
-    //TO DO: Essi fix this
-
-    std::vector<Theater> alphabetized_theaters;
-    std::string previous = "";
-    for(Theater t : all_theaters) {
-
-        bool is_smaller = t.get_name() < previous;
-
-        if(is_smaller) {
-           alphabetized_theaters.insert(alphabetized_theaters.begin(), t);
-        } else {
-           alphabetized_theaters.push_back(t);
-        }
-
-        previous = t.get_name();
-    }
-
-    all_theaters = alphabetized_theaters;
-
-}
-
 // Main function
 int main()
 {
@@ -191,7 +154,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    std::vector<Theater> all_theaters = read_file(file_object);
+    std::map<std::string, Theater> all_theaters = read_file(file_object);
 
     // Read user input from standard input and ask for commands to access information given in the file
     std::string input = "";
@@ -212,9 +175,8 @@ int main()
             return EXIT_SUCCESS;
         }
         else if (commands.at(0) == "theaters") {
-            order_alphabetically(all_theaters);
-            for(Theater theater : all_theaters) {
-                std::cout << theater.get_name() << std::endl;
+            for(auto& theater_info : all_theaters) {
+                std::cout << theater_info.first << std::endl;
             }
         }
         else if (commands.at(0) == "plays") {
@@ -232,4 +194,6 @@ int main()
 
 
     }
+
+
 }
