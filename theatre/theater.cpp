@@ -1,6 +1,20 @@
+/* Program authors
+ *
+ * Name: Essi Asunmaa
+ * Student number:
+ * UserID:
+ * E-mail: essi.n.asunmaa@tuni.fi
+ *
+ * Name: Teemu Syrjala
+ * Student number: 151461352
+ * UserID: nrtesy
+ * E-Mail: teemu.syrjala@tuni.fi
+ */
+
 #include "theater.hh"
 #include "play.hh"
 
+//Class constructors
 Theater::Theater(std::string name,
                  std::string town,
                  std::vector<Play> plays):
@@ -8,10 +22,11 @@ Theater::Theater(std::string name,
 {
 }
 
-Theater::~Theater()
+Theater::Theater()
 {
 }
 
+// Class functions
 std::string Theater::get_name() const
 {
     return name_;
@@ -27,6 +42,7 @@ std::vector<Play> Theater::get_plays() const
     return plays_;
 }
 
+// Add a play into specific theater objects plays if it doesn't already exist
 void Theater::put_play(Play& new_play)
 {
     bool play_exists = false;
@@ -43,6 +59,7 @@ void Theater::put_play(Play& new_play)
     }
 }
 
+
 Play Theater::get_play(std::string play_name) {
 
     for(auto& play : plays_) {
@@ -55,6 +72,7 @@ Play Theater::get_play(std::string play_name) {
     return {"", {}, 0};
 }
 
+// Adds an actor into a Play object if it doesn't already exist
 void Theater::put_actor_in_play(std::string actor, std::string play_name)
 {
     // Find the play being asked for
@@ -77,6 +95,7 @@ void Theater::put_actor_in_play(std::string actor, std::string play_name)
     }
 }
 
+// Assigns a new value for available seats in a Play object
 void Theater::update_seats_in_play(int new_seats, std::string play_name)
 {
     // Find the play being asked for
@@ -87,6 +106,7 @@ void Theater::update_seats_in_play(int new_seats, std::string play_name)
     }
 }
 
+// Test prints
 void Theater::print()
 {
     std::cout << "----------------------------------" << std::endl;

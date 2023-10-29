@@ -12,7 +12,7 @@ public:
             std::string town, 
             std::vector<Play> plays);
     
-    ~Theater();
+    Theater();
     
     // Get details about theater
     std::string get_name() const;

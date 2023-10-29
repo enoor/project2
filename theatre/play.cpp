@@ -1,3 +1,16 @@
+/* Program authors
+ *
+ * Name: Essi Asunmaa
+ * Student number:
+ * UserID:
+ * E-mail: essi.n.asunmaa@tuni.fi
+ *
+ * Name: Teemu Syrjala
+ * Student number: 151461352
+ * UserID: nrtesy
+ * E-Mail: teemu.syrjala@tuni.fi
+ */
+
 #include "play.hh"
 
 Play::Play(std::string name, std::set<std::string> actors, int available_seats) :

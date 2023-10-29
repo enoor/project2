@@ -1,3 +1,48 @@
+/* Theater database
+ *
+ * Desc:
+ *   This program implements a searchable theater database. The program
+ * reads a text file with a semicolon (;) delimiter and constructs a
+ * database of theaters. The theaters stored can contain information about their
+ * town of operation, the plays they have running, the main actors involved
+ * in these plays and the number of seats available for an upcoming show.
+ *   The text file should follow the form: "Town;Theater name;Play name;
+ * Actor;Seats available" and it can not contain empty fields. Whenever a new
+ * value for available seats is read for a specific play in a specific theater,
+ * the last value read is the up-to-date number of seats available. After
+ * reading the file, the program expects commands from the user with the prompt
+ * 'the>' after which the user can give the following commands:
+ *
+ *   theatres - prints all the known theatres in alphabetical order,
+ *   plays - prints all the plays in alphabetical order,
+ *   theatres_of_play <play> - prints all the theatres that offer the given
+ *                             play,
+ *   plays_in_theatre <theatre> - prints the plays of the given theatre,
+ *   plays_in_town <town> - prints those plays in the given town that has
+ *                          free seats,
+ *   players_in_play <play> [<theatre>] - prints actors in the given play,
+ *   quit - terminates the program.
+ *
+ * Quotation marks can be used when giving commands. For ecample,
+ * 'theatres_of_play Evita' and 'theatres_of_play "Evita"' have the same output.
+ *
+ *
+ * Program authors
+ *
+ * Name: Essi Asunmaa
+ * Student number:
+ * UserID:
+ * E-mail: essi.n.asunmaa@tuni.fi
+ *
+ * Name: Teemu Syrjala
+ * Student number: 151461352
+ * UserID: nrtesy
+ * E-Mail: teemu.syrjala@tuni.fi
+ *
+ * Notes about the program and it's implementation (if any):
+ *
+ */
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -5,9 +50,6 @@
 #include <fstream>
 #include <theater.hh>
 #include <play.hh>
-
-/* Comment by Teemu
- */
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -64,6 +106,13 @@ std::vector<std::string> split(const std::string& str, char delim)
     return result;
 }
 
+/* read_file reads a text file with a ';' delimiter character line by line and
+ * creates a Theater class object for all the theaters it comes across.
+ * Information about the play is read and stored in a Play object, which is then
+ * stored inside a Theater object. If a Theater object already exists, the
+ * function updates the existing class object. It also constructs and returns a
+ * map containing all the class objects, key value being the theater name.
+ */
 std::map<std::string, Theater> read_file(std::ifstream& file) {
 
     std::map<std::string, Theater> theaters;
@@ -72,7 +121,7 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
 
     while (getline(file, line)) {
 
-        std::cout << "test input    " << line << std::endl;
+        // std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
         std::string town = info.at(0);
         std::string name = info.at(1);
@@ -176,14 +225,64 @@ int main()
             // TO DO: Essi
         }
         else if (commands.at(0) == "plays_in_theater") {
-            // TO DO: Teemu
+            std::string target_theater = commands.at(1);
+            if (all_theaters.find(target_theater) != all_theaters.end()) {
+                // assign pointer to the specific Theater object to access
+                // it's plays
+                Theater* theater = &all_theaters[target_theater];
+                std::vector<Play> plays_to_print = theater->get_plays();
+                for (auto& play : plays_to_print){
+                    std::cout << play.get_name() << std::endl;
+                }
+            }
+            else {
+                std::cout << THEATRE_NOT_FOUND << std::endl;
+            }
+
         }
         else if (commands.at(0) == "players_in_play") {
-            // TO DO: Teemu
+            std::string target_play = commands.at(1);
+
+            // specific theater from input
+            if (commands.size() == 3){
+                std::string target_theater = commands.at(2);
+                if (all_theaters.find(target_theater) != all_theaters.end()) {
+                    // use pointer to Theater object to access its plays
+                    Theater* theater = &all_theaters[target_theater];
+                    Play play = theater->get_play(target_play);
+                    std::cout << theater->get_name();
+                    // loop through and print actors in the Play oject's set
+                    for (const std::string& actor : play.get_actors()) {
+                        std::cout << theater->get_name() << " : " << actor << std::endl;
+                    }
+                    }
+                else {
+                    std::cout << THEATRE_NOT_FOUND << std::endl;
+                }
+                }
+            // no specific theater from the input
+            // iterate through all the theaters searching for the wanted play
+            if (commands.size() == 2){
+                for (auto& theater_obj : all_theaters ){
+                    Theater* target_theater = &theater_obj.second;
+                    Play play = target_theater->get_play(target_play);
+                    // loop through and print actors in the Play object's set
+                    for (const std::string& actor : play.get_actors()) {
+                        std::cout << target_theater->get_name() << " : " <<
+                        actor << std::endl;
+                    }
+                }
+
+            }
+
+
+            }
+
+
         }
 
 
     }
 
 
-}
+
