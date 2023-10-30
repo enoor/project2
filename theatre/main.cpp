@@ -119,17 +119,26 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
 
     std::string line;
 
-    int linecount = 1;
+    int linecount = 0;
     while (getline(file, line)) {
-
+        linecount += 1;
         // std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
         if (info.size() != NUMBER_OF_FIELDS){
-            std::cout << EMPTY_FIELD << std::endl;
+            std::cout << EMPTY_FIELD << linecount << std::endl;
             theaters.clear(); // empty the map to indicate a failed read. This
             // gets returned outside the loop and error is given in main if
             // the map is empty.
             break;
+        }
+        else {
+            for (std::string& i : info){
+                if (i == ""){
+                    std::cout << EMPTY_FIELD << linecount << std::endl;
+                    theaters.clear();
+                    break;
+                }
+            }
         }
         std::string town = info.at(0);
         std::string name = info.at(1);
@@ -165,7 +174,6 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
         }
 
     }
-    linecount += 1;
     file.close();
     return theaters;
 }
