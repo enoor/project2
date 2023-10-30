@@ -13,8 +13,8 @@
 
 #include "play.hh"
 
-Play::Play(std::string name, std::set<std::string> actors, int available_seats) :
-    name_(name), actors_(actors), available_seats_(available_seats)
+Play::Play(std::string name, std::string alias, std::set<std::string> actors, int available_seats) :
+    name_(name), alias_(alias), actors_(actors), available_seats_(available_seats)
 {
 
 }
@@ -27,6 +27,11 @@ Play::~Play()
 std::string Play::get_name() const
 {
     return name_;
+}
+
+std::string Play::get_alias() const
+{
+    return alias_;
 }
 
 std::set<std::string> Play::get_actors() const

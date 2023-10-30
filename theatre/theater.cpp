@@ -63,13 +63,14 @@ void Theater::put_play(Play& new_play)
 Play Theater::get_play(std::string play_name) {
 
     for(auto& play : plays_) {
-        if(play.get_name() == play_name) {
+        // search by play names or their aliases
+        if(play.get_name() == play_name || play.get_alias() == play_name) {
             return play;
 
         }
     }
 
-    return {"", {}, 0};
+    return {"", "", {}, 0};
 }
 
 // Adds an actor into a Play object if it doesn't already exist

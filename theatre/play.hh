@@ -8,6 +8,7 @@ class Play
 {
 public:
     Play(std::string name,
+         std::string alias,
          std::set<std::string> actors,
          int available_seats);
 
@@ -15,6 +16,7 @@ public:
 
     // Get details about play
     std::string get_name() const;
+    std::string get_alias() const;
     std::set<std::string> get_actors() const;
     int get_seats() const;
 
@@ -27,6 +29,7 @@ private:
     std::string name_;
     std::set<std::string> actors_;
     int available_seats_;
+    std::string alias_;
 };
 
 #endif // PLAY_HH

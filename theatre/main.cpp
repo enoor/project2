@@ -121,11 +121,16 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
 
     while (getline(file, line)) {
 
-        // std::cout << "test input    " << line << std::endl;
+        std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
         std::string town = info.at(0);
         std::string name = info.at(1);
-        std::string play = info.at(2);
+        std::vector play = split(info.at(2), '/');
+        std::string play_name = play.at(0);
+        std::string play_alias;
+        if (play.size() > 1){
+            play_alias = play.at(1);
+        }
         std::string actor = info.at(3);
 
         int seats;
@@ -135,15 +140,15 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
             seats = std::stoi(info.at(4)); // string to integer conversion
         }
 
-        Play play_data(play, {actor}, seats); // add play data into an object
+        Play play_data(play_name, play_alias, {actor}, seats); // add play data into an object
 
         // Check if the theater exists
         if(theaters.find(name) != theaters.end()) {
             //Update existing theater
             Theater& existing_theater = theaters.at(name);
             existing_theater.put_play(play_data); // if play doesn't exist, put play
-            existing_theater.put_actor_in_play(actor, play); // if play exists, put actor if it doesn't exist
-            existing_theater.update_seats_in_play(seats,play); // updates seats in said play
+            existing_theater.put_actor_in_play(actor, play_name); // if play exists, put actor if it doesn't exist
+            existing_theater.update_seats_in_play(seats,play_name); // updates seats in said play
 
         } else {
             // Add new theater
@@ -242,6 +247,7 @@ int main()
         }
         else if (commands.at(0) == "players_in_play") {
             std::string target_play = commands.at(1);
+            bool play_found = false; // flag for error printing
 
             // specific theater from input
             if (commands.size() == 3){
@@ -250,12 +256,15 @@ int main()
                     // use pointer to Theater object to access its plays
                     Theater* theater = &all_theaters[target_theater];
                     Play play = theater->get_play(target_play);
+                    if (play.get_name() != ""){
+                        play_found = true;
                     std::cout << theater->get_name();
                     // loop through and print actors in the Play oject's set
                     for (const std::string& actor : play.get_actors()) {
                         std::cout << theater->get_name() << " : " << actor << std::endl;
                     }
                     }
+                }
                 else {
                     std::cout << THEATRE_NOT_FOUND << std::endl;
                 }
@@ -266,23 +275,20 @@ int main()
                 for (auto& theater_obj : all_theaters ){
                     Theater* target_theater = &theater_obj.second;
                     Play play = target_theater->get_play(target_play);
+                    if (play.get_name() != ""){
+                        play_found = true;
                     // loop through and print actors in the Play object's set
                     for (const std::string& actor : play.get_actors()) {
                         std::cout << target_theater->get_name() << " : " <<
                         actor << std::endl;
                     }
-                }
-
+                  }
+               }
             }
-
-
+            if (play_found == false){
+                std::cout << PLAY_NOT_FOUND << std::endl;
             }
-
-
         }
-
-
     }
-
-
+}
 
