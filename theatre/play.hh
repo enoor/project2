@@ -1,3 +1,16 @@
+/* Program authors
+*
+* Name: Essi Asunmaa
+* Student number: 151876727
+* UserID: bmesas
+* E-mail: essi.n.asunmaa@tuni.fi
+*
+* Name: Teemu Syrjala
+* Student number: 151461352
+* UserID: nrtesy
+* E-Mail: teemu.syrjala@tuni.fi
+ */
+
 #ifndef PLAY_HH
 #define PLAY_HH
 #include <iostream>
