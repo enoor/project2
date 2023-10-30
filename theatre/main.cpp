@@ -1,14 +1,14 @@
-/* Theater database
+/* Theatre database
  *
  * Desc:
- *   This program implements a searchable theater database. The program
+ *   This program implements a searchable theatre database. The program
  * reads a text file with a semicolon (;) delimiter and constructs a
- * database of theaters. The theaters stored can contain information about their
+ * database of theatres. The theatres stored can contain information about their
  * town of operation, the plays they have running, the main actors involved
  * in these plays and the number of seats available for an upcoming show.
- *   The text file should follow the form: "Town;Theater name;Play name;
+ *   The text file should follow the form: "Town;Theatre name;Play name;
  * Actor;Seats available" and it can not contain empty fields. Whenever a new
- * value for available seats is read for a specific play in a specific theater,
+ * value for available seats is read for a specific play in a specific theatre,
  * the last value read is the up-to-date number of seats available. After
  * reading the file, the program expects commands from the user with the prompt
  * 'the>' after which the user can give the following commands:
@@ -50,7 +50,7 @@
 #include <map>
 #include <utility>
 #include <fstream>
-#include <theater.hh>
+#include <theatre.hh>
 #include <play.hh>
 #include <boost/algorithm/string.hpp>
 
@@ -80,10 +80,10 @@ struct Command {
 
 // Available commands for user
 const std::vector<Command> COMMANDS = {{"quit",1,1},
-                                       {"theaters",1,1},
+                                       {"theatres",1,1},
                                        {"plays",1,1},
-                                       {"theaters_of_play",2,2},
-                                       {"plays_in_theater",2,2},
+                                       {"theatres_of_play",2,2},
+                                       {"plays_in_theatre",2,2},
                                        {"players_in_play",2,3}};
 
 // Casual split function, if delim char is between "'s, ignores it.
@@ -110,15 +110,15 @@ std::vector<std::string> split(const std::string& str, char delim)
 }
 
 /* read_file reads a text file with a ';' delimiter character line by line and
- * creates a Theater class object for all the theaters it comes across.
+ * creates a Theatre class object for all the theatres it comes across.
  * Information about the play is read and stored in a Play object, which is then
- * stored inside a Theater object. If a Theater object already exists, the
+ * stored inside a Theatre object. If a Theatre object already exists, the
  * function updates the existing class object. It also constructs and returns a
- * map containing all the class objects, key value being the theater name.
+ * map containing all the class objects, key value being the theatre name.
  */
-std::map<std::string, Theater> read_file(std::ifstream& file) {
+std::map<std::string, Theatre> read_file(std::ifstream& file) {
 
-    std::map<std::string, Theater> theaters;
+    std::map<std::string, Theatre> theatres;
 
     std::string line;
 
@@ -129,7 +129,7 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
         std::vector info = split(line, ';');
         if (info.size() != NUMBER_OF_FIELDS){
             std::cout << EMPTY_FIELD << linecount << std::endl;
-            theaters.clear(); // empty the map to indicate a failed read. This
+            theatres.clear(); // empty the map to indicate a failed read. This
             // gets returned outside the loop and error is given in main if
             // the map is empty.
             break;
@@ -140,7 +140,7 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
                                 //to remove possible whitespace from field
                 if (i == ""){
                     std::cout << EMPTY_FIELD << linecount << std::endl;
-                    theaters.clear();
+                    theatres.clear();
                     break;
                 }
             }
@@ -164,23 +164,23 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
 
         Play play_data(play_name, play_alias, {actor}, seats); // add play data into an object
 
-        // Check if the theater exists
-        if(theaters.find(name) != theaters.end()) {
-            //Update existing theater
-            Theater& existing_theater = theaters.at(name);
-            existing_theater.put_play(play_data); // if play doesn't exist, put play
-            existing_theater.put_actor_in_play(actor, play_name); // if play exists, put actor if it doesn't exist
-            existing_theater.update_seats_in_play(seats,play_name); // updates seats in said play
+        // Check if the theatre exists
+        if(theatres.find(name) != theatres.end()) {
+            //Update existing theatre
+            Theatre& existing_theatre = theatres.at(name);
+            existing_theatre.put_play(play_data); // if play doesn't exist, put play
+            existing_theatre.put_actor_in_play(actor, play_name); // if play exists, put actor if it doesn't exist
+            existing_theatre.update_seats_in_play(seats,play_name); // updates seats in said play
 
         } else {
-            // Add new theater
-            Theater theater_data(name,town,{play_data});
-            theaters.insert({name, theater_data});
+            // Add new theatre
+            Theatre theatre_data(name,town,{play_data});
+            theatres.insert({name, theatre_data});
         }
 
     }
     file.close();
-    return theaters;
+    return theatres;
 }
 
 // Checks whether the command given by user is valid and gives an error message if not.
@@ -208,7 +208,7 @@ bool is_command_valid(std::vector<std::string>& commands) {
 int main()
 {
 
-    // Read a file into memory and transform it into Theater objects based on given information
+    // Read a file into memory and transform it into Theatre objects based on given information
     std::string filename = "plays.csv";
     //std::cout << "Input file: ";
     //std::cin >> filename;
@@ -219,8 +219,8 @@ int main()
         return EXIT_FAILURE;
     }
 
-    std::map<std::string, Theater> all_theaters = read_file(file_object);
-    if (all_theaters.empty()){
+    std::map<std::string, Theatre> all_theatres = read_file(file_object);
+    if (all_theatres.empty()){
         return EXIT_FAILURE;
     }
 
@@ -242,16 +242,16 @@ int main()
         if(commands.at(0) == "quit") {
             return EXIT_SUCCESS;
         }
-        else if (commands.at(0) == "theaters") {
-            for(auto& theater_info : all_theaters) {
-                std::cout << theater_info.first << std::endl;
+        else if (commands.at(0) == "theatres") {
+            for(auto& theatre_info : all_theatres) {
+                std::cout << theatre_info.first << std::endl;
             }
         }
         else if (commands.at(0) == "plays") {
             std::map<std::string, std::string> unique_plays = {};
-            for(auto& theater_obj : all_theaters){
-                 Theater* theater = &theater_obj.second;
-                 std::vector<Play> plays = theater->get_plays();
+            for(auto& theatre_obj : all_theatres){
+                 Theatre* theatre = &theatre_obj.second;
+                 std::vector<Play> plays = theatre->get_plays();
 
                  for (auto& item : plays){
                      std::string play_name = item.get_name();
@@ -276,33 +276,31 @@ int main()
                 }
             }
         }
-        else if (commands.at(0) == "theaters_of_play") {
-            std::map<std::string, std::string> theatername_map;
+        else if (commands.at(0) == "theatres_of_play") {
+            std::map<std::string, std::string> theatrename_map;
             std::string target_play = commands.at(1);
 
-            for (auto& theater_obj : all_theaters) {
-                Theater* theater = &theater_obj.second;
-                Play play = theater->get_play(target_play);
+            for (auto& theatre_obj : all_theatres) {
+                Theatre* theatre = &theatre_obj.second;
+                Play play = theatre->get_play(target_play);
                 if (play.get_name() == target_play){
-                    theatername_map[theater->get_name()];
+                    theatrename_map[theatre->get_name()];
 
             }
             }
-            for (auto& theater : theatername_map){
-                std::cout << theater.first << std::endl;
+            for (auto& theatre : theatrename_map){
+                std::cout << theatre.first << std::endl;
             }
         }
 
-
-
-        else if (commands.at(0) == "plays_in_theater") {
-            std::string target_theater = commands.at(1);
+        else if (commands.at(0) == "plays_in_theatre") {
+            std::string target_theatre = commands.at(1);
             std::map<std::string, std::string> playname_map;
-            if (all_theaters.find(target_theater) != all_theaters.end()) {
-                // assign pointer to the specific Theater object to access
+            if (all_theatres.find(target_theatre) != all_theatres.end()) {
+                // assign pointer to the specific Theatre object to access
                 // it's plays
-                Theater* theater = &all_theaters[target_theater];
-                std::vector<Play> plays_to_print = theater->get_plays();
+                Theatre* theatre = &all_theatres[target_theatre];
+                std::vector<Play> plays_to_print = theatre->get_plays();
                 for (auto& play : plays_to_print){
                     playname_map[play.get_name()];
                 }
@@ -315,28 +313,33 @@ int main()
             }
 
         }
+        else if (commands.at(0) == "players_in_town"){
+            // TO DO: Essi
+        }
+
+
         else if (commands.at(0) == "players_in_play") {
             std::string target_play = commands.at(1);
             // initialize a map within a map that is printed in the end
             std::map<std::string, std::map<std::string, std::string>> play_actor_map;
             bool play_found = false; // flag for error printing
 
-            // specific theater from input
+            // specific theatre from input
             if (commands.size() == 3){
-                std::string target_theater = commands.at(2);
-                if (all_theaters.find(target_theater) != all_theaters.end()) {
-                    // use pointer to Theater object to access its plays
-                    Theater* theater = &all_theaters[target_theater];
-                    Play play = theater->get_play(target_play);
+                std::string target_theatre = commands.at(2);
+                if (all_theatres.find(target_theatre) != all_theatres.end()) {
+                    // use pointer to Theatre object to access its plays
+                    Theatre* theatre = &all_theatres[target_theatre];
+                    Play play = theatre->get_play(target_play);
                     if (play.get_name() != ""){
                         play_found = true;
-                     // map of actors to be put inside theater
-                     std::map<std::string, std::string>& play_actors = play_actor_map[target_theater];
-                    // old implementation std::cout << theater->get_name();
+                     // map of actors to be put inside theatre
+                     std::map<std::string, std::string>& play_actors = play_actor_map[target_theatre];
+                    // old implementation std::cout << theatre->get_name();
                     // loop through and print actors in the Play oject's set
                     for (const std::string& actor : play.get_actors()) {
                         play_actors[actor] = "";
-                        // old implementation std::cout << theater->get_name() << " : " << actor << std::endl;
+                        // old implementation std::cout << theatre->get_name() << " : " << actor << std::endl;
                     }
                     }
                 }
@@ -344,20 +347,20 @@ int main()
                     std::cout << THEATRE_NOT_FOUND << std::endl;
                 }
                 }
-            // no specific theater from the input
-            // iterate through all the theaters searching for the wanted play
+            // no specific theatre from the input
+            // iterate through all the theatres searching for the wanted play
             if (commands.size() == 2){
-                for (auto& theater_obj : all_theaters ){
-                    Theater* target_theater = &theater_obj.second;
-                    Play play = target_theater->get_play(target_play);
+                for (auto& theatre_obj : all_theatres ){
+                    Theatre* target_theatre = &theatre_obj.second;
+                    Play play = target_theatre->get_play(target_play);
                     if (play.get_name() != ""){
                         play_found = true;
-                        std::map<std::string, std::string>& actor_map = play_actor_map[target_theater->get_name()];
+                        std::map<std::string, std::string>& actor_map = play_actor_map[target_theatre->get_name()];
 
                     // loop through and print actors in the Play object's set
                     for (const std::string& actor : play.get_actors()) {
                         actor_map[actor] = "";
-                        // old implementation std::cout << target_theater->get_name() << " : " <<
+                        // old implementation std::cout << target_theatre->get_name() << " : " <<
                         // old implementationactor << std::endl;
                     }
                   }

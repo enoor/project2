@@ -11,39 +11,39 @@
  * E-Mail: teemu.syrjala@tuni.fi
  */
 
-#include "theater.hh"
+#include "theatre.hh"
 #include "play.hh"
 
 //Class constructors
-Theater::Theater(std::string name,
+Theatre::Theatre(std::string name,
                  std::string town,
                  std::vector<Play> plays):
     name_(name), town_(town), plays_(plays)
 {
 }
 
-Theater::Theater()
+Theatre::Theatre()
 {
 }
 
 // Class functions
-std::string Theater::get_name() const
+std::string Theatre::get_name() const
 {
     return name_;
 }
 
-std::string Theater::get_town() const
+std::string Theatre::get_town() const
 {
     return town_;
 }
 
-std::vector<Play> Theater::get_plays() const
+std::vector<Play> Theatre::get_plays() const
 {
     return plays_;
 }
 
-// Add a play into specific theater objects plays if it doesn't already exist
-void Theater::put_play(Play& new_play)
+// Add a play into specific theatre objects plays if it doesn't already exist
+void Theatre::put_play(Play& new_play)
 {
     bool play_exists = false;
     for (Play& existingPlay : plays_) {
@@ -60,7 +60,7 @@ void Theater::put_play(Play& new_play)
 }
 
 
-Play Theater::get_play(std::string play_name) {
+Play Theatre::get_play(std::string play_name) {
 
     for(auto& play : plays_) {
         // search by play names or their aliases
@@ -74,7 +74,7 @@ Play Theater::get_play(std::string play_name) {
 }
 
 // Adds an actor into a Play object if it doesn't already exist
-void Theater::put_actor_in_play(std::string actor, std::string play_name)
+void Theatre::put_actor_in_play(std::string actor, std::string play_name)
 {
     // Find the play being asked for
     for (Play& play : plays_) {
@@ -97,7 +97,7 @@ void Theater::put_actor_in_play(std::string actor, std::string play_name)
 }
 
 // Assigns a new value for available seats in a Play object
-void Theater::update_seats_in_play(int new_seats, std::string play_name)
+void Theatre::update_seats_in_play(int new_seats, std::string play_name)
 {
     // Find the play being asked for
     for (Play& play : plays_) {
@@ -108,10 +108,10 @@ void Theater::update_seats_in_play(int new_seats, std::string play_name)
 }
 
 // Test prints
-void Theater::print()
+void Theatre::print()
 {
     std::cout << "----------------------------------" << std::endl;
-    std::cout << "Theater name: " << name_ << std::endl;
+    std::cout << "Theatre name: " << name_ << std::endl;
     std::cout << "In town: " << town_ << std::endl << std::endl;
 
     std::cout << "With following plays: " << std::endl;

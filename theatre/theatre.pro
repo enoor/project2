@@ -6,8 +6,8 @@ CONFIG -= qt
 SOURCES += \
         main.cpp \
         play.cpp \
-        theater.cpp
+        theatre.cpp
 
 HEADERS += \
     play.hh \
-    theater.hh
+    theatre.hh
