@@ -23,8 +23,10 @@
  *   players_in_play <play> [<theatre>] - prints actors in the given play,
  *   quit - terminates the program.
  *
- * Quotation marks can be used when giving commands. For ecample,
- * 'theatres_of_play Evita' and 'theatres_of_play "Evita"' have the same output.
+ * Quotation marks should be used when giving parameters consisting of multiple
+ * words. Quotation marks can also be used for single word parameters if
+ * preferred. For example, 'theatres_of_play Evita' and
+ * 'theatres_of_play "Evita"' have the same output.
  *
  *
  * Program authors
@@ -50,6 +52,7 @@
 #include <fstream>
 #include <theater.hh>
 #include <play.hh>
+#include <boost/algorithm/string.hpp>
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -133,6 +136,8 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
         }
         else {
             for (std::string& i : info){
+                boost::trim(i); //utilizing trim function from boost library
+                                //to remove possible whitespace from field
                 if (i == ""){
                     std::cout << EMPTY_FIELD << linecount << std::endl;
                     theaters.clear();
@@ -246,8 +251,19 @@ int main()
             // TO DO: Essi
         }
         else if (commands.at(0) == "theaters_of_play") {
-            // TO DO: Essi
-        }
+            std::string target_play = commands.at(1);
+
+            for (auto& theater_obj : all_theaters) {
+                Theater* theater = &theater_obj.second;
+                Play play = theater->get_play(target_play);
+                if (play.get_name() == target_play){
+                    std::cout << theater->get_name() << std::endl;
+            }
+            }
+            }
+
+
+
         else if (commands.at(0) == "plays_in_theater") {
             std::string target_theater = commands.at(1);
             if (all_theaters.find(target_theater) != all_theaters.end()) {
@@ -309,5 +325,5 @@ int main()
             }
         }
     }
-}
 
+}
