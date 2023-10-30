@@ -277,37 +277,48 @@ int main()
             }
         }
         else if (commands.at(0) == "theaters_of_play") {
+            std::map<std::string, std::string> theatername_map;
             std::string target_play = commands.at(1);
 
             for (auto& theater_obj : all_theaters) {
                 Theater* theater = &theater_obj.second;
                 Play play = theater->get_play(target_play);
                 if (play.get_name() == target_play){
-                    std::cout << theater->get_name() << std::endl;
+                    theatername_map[theater->get_name()];
+
             }
             }
+            for (auto& theater : theatername_map){
+                std::cout << theater.first << std::endl;
             }
+        }
 
 
 
         else if (commands.at(0) == "plays_in_theater") {
             std::string target_theater = commands.at(1);
+            std::map<std::string, std::string> playname_map;
             if (all_theaters.find(target_theater) != all_theaters.end()) {
                 // assign pointer to the specific Theater object to access
                 // it's plays
                 Theater* theater = &all_theaters[target_theater];
                 std::vector<Play> plays_to_print = theater->get_plays();
                 for (auto& play : plays_to_print){
-                    std::cout << play.get_name() << std::endl;
+                    playname_map[play.get_name()];
                 }
             }
             else {
                 std::cout << THEATRE_NOT_FOUND << std::endl;
             }
+            for (auto& name : playname_map){
+                std::cout << name.first << std::endl;
+            }
 
         }
         else if (commands.at(0) == "players_in_play") {
             std::string target_play = commands.at(1);
+            // initialize a map within a map that is printed in the end
+            std::map<std::string, std::map<std::string, std::string>> play_actor_map;
             bool play_found = false; // flag for error printing
 
             // specific theater from input
@@ -319,10 +330,13 @@ int main()
                     Play play = theater->get_play(target_play);
                     if (play.get_name() != ""){
                         play_found = true;
-                    std::cout << theater->get_name();
+                     // map of actors to be put inside theater
+                     std::map<std::string, std::string>& play_actors = play_actor_map[target_theater];
+                    // old implementation std::cout << theater->get_name();
                     // loop through and print actors in the Play oject's set
                     for (const std::string& actor : play.get_actors()) {
-                        std::cout << theater->get_name() << " : " << actor << std::endl;
+                        play_actors[actor] = "";
+                        // old implementation std::cout << theater->get_name() << " : " << actor << std::endl;
                     }
                     }
                 }
@@ -338,18 +352,31 @@ int main()
                     Play play = target_theater->get_play(target_play);
                     if (play.get_name() != ""){
                         play_found = true;
+                        std::map<std::string, std::string>& actor_map = play_actor_map[target_theater->get_name()];
+
                     // loop through and print actors in the Play object's set
                     for (const std::string& actor : play.get_actors()) {
-                        std::cout << target_theater->get_name() << " : " <<
-                        actor << std::endl;
+                        actor_map[actor] = "";
+                        // old implementation std::cout << target_theater->get_name() << " : " <<
+                        // old implementationactor << std::endl;
                     }
                   }
                }
             }
-            if (play_found == false){
+            if (play_found == true){
+                // print the map within a map contents
+                for (const auto& entry : play_actor_map) {
+                            for (const auto& play_actor : entry.second) {
+                                std::cout << entry.first << " : " << play_actor.first << std::endl;
+                            }
+
+
+            }
+
+            }
+            else {
                 std::cout << PLAY_NOT_FOUND << std::endl;
             }
-        }
     }
-
+}
 }
