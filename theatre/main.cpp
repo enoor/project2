@@ -247,8 +247,34 @@ int main()
                 std::cout << theater_info.first << std::endl;
             }
         }
-        else if (commands.at(0) == "plays") {         
-            // TO DO: Essi
+        else if (commands.at(0) == "plays") {
+            std::map<std::string, std::string> unique_plays = {};
+            for(auto& theater_obj : all_theaters){
+                 Theater* theater = &theater_obj.second;
+                 std::vector<Play> plays = theater->get_plays();
+
+                 for (auto& item : plays){
+                     std::string play_name = item.get_name();
+                     if (unique_plays.find(play_name) == unique_plays.end()){
+                         if (item.get_alias() != ""){
+                             unique_plays[play_name] = item.get_alias();
+                         }
+                         else {
+                             unique_plays[play_name] = "";
+                         }
+
+                     }
+
+                 }
+             }
+            for (auto& play : unique_plays){
+                if (play.second == ""){
+                    std::cout << play.first << std::endl;
+                }
+                else{
+                    std::cout << play.first << " *** " << play.second << std::endl;
+                }
+            }
         }
         else if (commands.at(0) == "theaters_of_play") {
             std::string target_play = commands.at(1);
