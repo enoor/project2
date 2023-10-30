@@ -42,6 +42,11 @@
  * E-Mail: teemu.syrjala@tuni.fi
  *
  * Notes about the program and it's implementation (if any):
+ * Map structures have been utilized to deal with the need for alphabetical
+ * printing.
+ *
+ * PLEASE NOTE we have worked with the project on GitHub at:
+ * https://github.com/enoor/project2
  *
  */
 
