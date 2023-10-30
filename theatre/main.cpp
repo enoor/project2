@@ -119,10 +119,18 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
 
     std::string line;
 
+    int linecount = 1;
     while (getline(file, line)) {
 
-        std::cout << "test input    " << line << std::endl;
+        // std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
+        if (info.size() != NUMBER_OF_FIELDS){
+            std::cout << EMPTY_FIELD << std::endl;
+            theaters.clear(); // empty the map to indicate a failed read. This
+            // gets returned outside the loop and error is given in main if
+            // the map is empty.
+            break;
+        }
         std::string town = info.at(0);
         std::string name = info.at(1);
         std::vector play = split(info.at(2), '/');
@@ -157,7 +165,7 @@ std::map<std::string, Theater> read_file(std::ifstream& file) {
         }
 
     }
-
+    linecount += 1;
     file.close();
     return theaters;
 }
@@ -199,6 +207,9 @@ int main()
     }
 
     std::map<std::string, Theater> all_theaters = read_file(file_object);
+    if (all_theaters.empty()){
+        return EXIT_FAILURE;
+    }
 
     // Read user input from standard input and ask for commands to access information given in the file
     std::string input = "";
@@ -223,7 +234,7 @@ int main()
                 std::cout << theater_info.first << std::endl;
             }
         }
-        else if (commands.at(0) == "plays") {
+        else if (commands.at(0) == "plays") {         
             // TO DO: Essi
         }
         else if (commands.at(0) == "theaters_of_play") {
