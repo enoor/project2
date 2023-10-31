@@ -1,4 +1,5 @@
-/* Program authors
+/* This file includes the method functions for the class Play
+*  Program authors
 *
 * Name: Essi Asunmaa
 * Student number: 151876727
@@ -53,14 +54,5 @@ void Play::add_actor(std::string actor)
 {
     if(actors_.find(actor) == actors_.end()) {
         actors_.insert(actor);
-    }
-}
-
-void Play::print()
-{
-    std::cout << name_ << ": " << available_seats_ << std::endl;
-
-    for(auto& actor : actors_) {
-        std::cout << "- " << actor << std::endl;
     }
 }
