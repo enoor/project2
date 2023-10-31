@@ -289,16 +289,24 @@ int main()
             std::map<std::string, std::string> theatrename_map;
             std::string target_play = commands.at(1);
 
+            bool play_found = false;
             for (auto& theatre_obj : all_theatres) {
                 Theatre* theatre = &theatre_obj.second;
                 Play play = theatre->get_play(target_play);
-                if (play.get_name() == target_play){
+                if (play.get_name() == target_play or play.get_alias() == target_play){
+                    play_found = true;
                     theatrename_map[theatre->get_name()];
 
                 }
+
             }
-            for (auto& theatre : theatrename_map){
-                std::cout << theatre.first << std::endl;
+            if (!play_found){
+                std::cout << PLAY_NOT_FOUND << std::endl;
+            }
+            else{
+                for (auto& theatre : theatrename_map){
+                    std::cout << theatre.first << std::endl;
+                }
             }
         }
 
