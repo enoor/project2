@@ -355,12 +355,16 @@ int main()
                     // Print out all names and their aliases of a specific time
                     for(const auto& theatre_obj : town_plays) {
                         for(const auto& play_obj : theatre_obj.second) {
-                            std::cout << theatre_obj.first << " : " << play_obj.first;
-                            std::string alias = play_obj.second.get_alias();
-                            if(alias != "") {
-                                std::cout << " --- " << alias;
+
+                            int seats = play_obj.second.get_seats();
+                            if(seats > 0) {
+                                std::cout << theatre_obj.first << " : " << play_obj.first;
+                                std::string alias = play_obj.second.get_alias();
+                                if(alias != "") {
+                                    std::cout << " --- " << alias;
+                                }
+                                std::cout << " : " << play_obj.second.get_seats() << std::endl;
                             }
-                            std::cout << " : " << play_obj.second.get_seats() << std::endl;
                         }
                     }
                 }
@@ -375,12 +379,14 @@ int main()
             // initialize a map within a map that is printed in the end
             std::map<std::string, std::map<std::string, std::string>> play_actor_map;
             bool play_found = false; // flag for error printing
+            bool theatre_found = false; // flag for error printing
 
             // specific theatre from input
             if (commands.size() == 3){
                 std::string target_theatre = commands.at(2);
                 if (all_theatres.find(target_theatre) != all_theatres.end()) {
                     // use pointer to Theatre object to access its plays
+                    theatre_found = true;
                     Theatre* theatre = &all_theatres[target_theatre];
                     Play play = theatre->get_play(target_play);
                     if (play.get_name() != ""){
@@ -395,8 +401,11 @@ int main()
                         }
                     }
                 }
-                else {
+
+                if(!theatre_found) {
                     std::cout << THEATRE_NOT_FOUND << std::endl;
+                } else if(!play_found) {
+                    std::cout << PLAY_NOT_FOUND << std::endl;
                 }
             }
             // no specific theatre from the input
@@ -412,12 +421,15 @@ int main()
                         // loop through and print actors in the Play object's set
                         for (const std::string& actor : play.get_actors()) {
                             actor_map[actor] = "";
-                            // old implementation std::cout << target_theatre->get_name() << " : " <<
-                            // old implementationactor << std::endl;
                         }
                     }
                 }
+
+                if(!play_found) {
+                    std::cout << PLAY_NOT_FOUND << std::endl;
+                }
             }
+
             if (play_found == true){
                 // print the map within a map contents
                 for (const auto& entry : play_actor_map) {
@@ -426,9 +438,7 @@ int main()
                     }
                 }
             }
-            else {
-                std::cout << PLAY_NOT_FOUND << std::endl;
-            }
+
         }
     }
 }
