@@ -320,31 +320,45 @@ int main()
         }
         else if (commands.at(0) == "plays_in_town"){
             std::string target_town = commands.at(1);
-            std::map<std::string, std::pair<std::string, Play>> town_plays; // name of play as key, pair containing theater name and Play object
+            std::map<std::string, std::map<std::string, Play>> town_plays;
 
             bool town_found = false;
-            for (auto& theatre_obj : all_theatres ){
+            int total_seats_available = 0;
+            for (auto& theatre_obj : all_theatres){
+                // Find theaters in the target town
                 if(theatre_obj.second.get_town() == target_town) {
-                    town_found =true;
+                    town_found = true;
+                    town_plays.insert({theatre_obj.first, {{}}});
+
                     for(auto& play_obj : theatre_obj.second.get_plays()) {
                         const std::string& play_name = play_obj.get_name();
                         const std::string& alias = play_obj.get_alias();
-                        if(town_plays.find(play_name) == town_plays.end() and town_plays.find(alias) == town_plays.end()) {
-                            town_plays.insert({play_name, {theatre_obj.second.get_name(), play_obj}});
+                        std::map<std::string, Play>& saved_plays_in_theater = town_plays.at(theatre_obj.first);
+
+                        if(saved_plays_in_theater.find(play_name) == saved_plays_in_theater.end()
+                                and saved_plays_in_theater.find(alias) == saved_plays_in_theater.end()) {
+                            town_plays.at(theatre_obj.first).insert({play_name, play_obj});
+                            total_seats_available += play_obj.get_seats();
                         }
                     }
                 }
-
             }
             if (town_found == true){
-                // Print out all names and their aliases of a specific time
-                for (const auto& play_obj : town_plays) {
-                    std::cout << play_obj.second.first << " : " << play_obj.first;
-                    std::string alias = play_obj.second.second.get_alias();
-                    if(alias != "") {
-                        std::cout << " --- " << play_obj.second.second.get_alias();
+
+                if(total_seats_available == 0) {
+                    std::cout << "No plays available" << std::endl;
+                } else {
+                    // Print out all names and their aliases of a specific time
+                    for(const auto& theatre_obj : town_plays) {
+                        for(const auto& play_obj : theatre_obj.second) {
+                            std::cout << theatre_obj.first << " : " << play_obj.first;
+                            std::string alias = play_obj.second.get_alias();
+                            if(alias != "") {
+                                std::cout << " --- " << alias;
+                            }
+                            std::cout << " : " << play_obj.second.get_seats() << std::endl;
+                        }
                     }
-                    std::cout << " : " << play_obj.second.second.get_seats() << std::endl;
                 }
             }
             else {
