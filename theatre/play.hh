@@ -1,4 +1,14 @@
-/* Program authors
+/* Class Play defines objects containing information about a play and actors
+* related to the play. A Play object can have a name and an alias for flexible
+* calling. It also stores information about the available seats for the play.
+* The Play objects defined by class Play are used inside another class
+* "Theatre" to bind them to specific theatres.
+*
+* <name>             : string - name of the play
+* <alias>            : string - alias name of the play
+* <actors>           : set<string> - actor or actors involved in the play
+* <available_seats>  : int - number of available seats in this play
+*
 *
 * Name: Essi Asunmaa
 * Student number: 151876727
@@ -35,8 +45,6 @@ public:
 
     void update_seats(int new_seats); // Updates available seats
     void add_actor(std::string actor); // Adds actor if they aren't already listed
-
-    void print(); // Prints the contents of the object
 
 private:
     std::string name_;
