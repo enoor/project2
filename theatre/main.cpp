@@ -57,7 +57,6 @@
 #include <fstream>
 #include <theatre.hh>
 #include <play.hh>
-#include <boost/algorithm/string.hpp>
 
 // Fields in the input file
 const int NUMBER_OF_FIELDS = 5;
@@ -115,6 +114,20 @@ std::vector<std::string> split(const std::string& str, char delim)
     return result;
 }
 
+bool vector_contains_empty_fields (const std::vector<std::string>& str_vec, char delim = ' ') {
+
+    int field_not_empty = 0;
+    for(std::string str : str_vec) {
+        for(char c : str) {
+            if(c != delim) {
+                field_not_empty++;
+                break;
+            }
+        }
+    }
+    return field_not_empty != 5;
+}
+
 /* read_file reads a text file with a ';' delimiter character line by line and
  * creates a Theatre class object for all the theatres it comes across.
  * Information about the play is read and stored in a Play object, which is then
@@ -132,24 +145,15 @@ std::map<std::string, Theatre> read_file(std::ifstream& file) {
         linecount += 1;
         // std::cout << "test input    " << line << std::endl;
         std::vector info = split(line, ';');
-        if (info.size() != NUMBER_OF_FIELDS){
+
+        if (info.size() != NUMBER_OF_FIELDS or vector_contains_empty_fields(info)){
             std::cout << EMPTY_FIELD << linecount << std::endl;
             theatres.clear(); // empty the map to indicate a failed read. This
             // gets returned outside the loop and error is given in main if
             // the map is empty.
             break;
         }
-        else {
-            for (std::string& i : info){
-                boost::trim(i); //utilizing trim function from boost library
-                //to remove possible whitespace from field
-                if (i == ""){
-                    std::cout << EMPTY_FIELD << linecount << std::endl;
-                    theatres.clear();
-                    break;
-                }
-            }
-        }
+
         std::string town = info.at(0);
         std::string name = info.at(1);
         std::vector play = split(info.at(2), '/');
@@ -214,9 +218,9 @@ int main()
 {
 
     // Read a file into memory and transform it into Theatre objects based on given information
-    std::string filename = "plays.csv";
-    //std::cout << "Input file: ";
-    //std::cin >> filename;
+    std::string filename;
+    std::cout << "Input file: ";
+    std::getline(std::cin, filename);
 
     std::ifstream file_object(filename);
     if (!file_object) {

@@ -40,9 +40,9 @@ public:
 
 private:
     std::string name_;
+    std::string alias_;
     std::set<std::string> actors_;
     int available_seats_;
-    std::string alias_;
 };
 
 #endif // PLAY_HH
